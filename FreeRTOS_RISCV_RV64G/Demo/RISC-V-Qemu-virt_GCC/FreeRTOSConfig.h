@@ -80,7 +80,7 @@ void vAssertCalled( void );
 #define configTIMER_TASK_STACK_DEPTH	( 110 )
 
 /* RISC-V definitions. */
-#define configISR_STACK_SIZE_WORDS		4096
+#define configISR_STACK_SIZE_WORDS		2048
 
 /* Task priorities.  Allow these to be overridden. */
 #ifndef uartPRIMARY_PRIORITY

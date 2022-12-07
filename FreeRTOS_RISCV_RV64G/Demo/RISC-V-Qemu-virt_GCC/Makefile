@@ -27,12 +27,12 @@ LDFLAGS = -nostartfiles -Tfake_rom.lds \
 	-Xlinker -Map=RTOSDemo.map
 
 ifeq ($(DEBUG), 1)
-    CFLAGS += -Og -ggdb3
+    CFLAGS += -O3 -ggdb3
 else
     CFLAGS += -O2
 endif
 
-SRCS = main.c riscv-virt.c ns16550.c\
+SRCS = main.c riscv-virt.c ns16550.c printf-stdarg.c \
 	$(DEMO_SOURCE_DIR)/EventGroupsDemo.c \
 	$(DEMO_SOURCE_DIR)/TaskNotify.c \
 	$(DEMO_SOURCE_DIR)/TimerDemo.c \
@@ -54,7 +54,7 @@ ASMS = start.S vector.S\
 OBJS = $(SRCS:%.c=$(BUILD_DIR)/%.o) $(ASMS:%.S=$(BUILD_DIR)/%.o)
 DEPS = $(SRCS:%.c=$(BUILD_DIR)/%.d) $(ASMS:%.S=$(BUILD_DIR)/%.d)
 
-$(BUILD_DIR)/RTOSDemo.axf: $(OBJS) fake_rom.lds Makefile
+$(BUILD_DIR)/RTOSDemo.elf: $(OBJS) fake_rom.lds Makefile
 	$(CC) $(LDFLAGS) $(OBJS) -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile

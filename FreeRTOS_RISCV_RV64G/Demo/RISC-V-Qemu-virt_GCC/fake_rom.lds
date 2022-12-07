@@ -6,6 +6,7 @@ MEMORY
 	/* Fake ROM area */
 	rom (rxa) : ORIGIN = 0x80000000, LENGTH = 512K
 	ram (wxa) : ORIGIN = 0x80080000, LENGTH = 1024K
+	myram (wxa) : ORIGIN = 0x800a0000, LENGTH = 150K
 }
 
 SECTIONS
@@ -22,6 +23,7 @@ SECTIONS
 		*(.text.startup .text.startup.*)
 		*(.text .text.*)
 		*(.gnu.linkonce.t.*)
+		
 	} >rom AT>rom
 	
 	.fini :
@@ -64,6 +66,7 @@ SECTIONS
 
 	.data :
 	{
+		
 		*(.data .data.*)
 		*(.gnu.linkonce.d.*)
 		. = ALIGN(8);
@@ -77,10 +80,11 @@ SECTIONS
 		*(.srodata.cst4)
 		*(.srodata.cst2)
 		*(.srodata .srodata.*)
-
+		
 		. = ALIGN(8);
 		_edata = .;
 	} >ram AT>rom
+	
 
 	.bss.align :
 	{
@@ -106,8 +110,29 @@ SECTIONS
 	} >ram AT>rom
 
 	. = ALIGN(16);
-	_end = .;
+	
+	. = 0x800a0000 ;
 
+	/*-----------------------NOT WORK----------------------------*/
+	/*.coremark :
+	{
+		coremark.out(.*)
+	} >myram AT>rom
+	
+	coremark.data : {coremark.out(.data)} >myram AT>rom
+	coremark.bss : {coremark.out(.bss)} >myram AT>rom
+	coremark.text : {coremark.out(.text)} >myram AT>rom
+	
+	.coremark :
+	{
+		KEEP(*coremark.out(.*))
+	}
+	*/
+	/*----------------------------------------------------------*/
+	. = ALIGN(8);
+	
+	_end = .;
+	
 	.stack :
 	{
 		. = ALIGN(16);
