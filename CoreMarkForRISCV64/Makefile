@@ -1,3 +1,4 @@
+export PATH := /opt/riscv/bin:$(PATH)
 CROSS   = riscv64-unknown-elf-
 CC      = $(CROSS)gcc
 

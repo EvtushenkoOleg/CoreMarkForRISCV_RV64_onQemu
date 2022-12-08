@@ -61,7 +61,7 @@ void vTaskTest( void *pvParameters )
 	}
 }
 
-void vStartCoreMark(void *pvParameters){
+void vTaskCoreMark(void *pvParameters){
 	( void ) pvParameters;
 	vSendString( "in Funct startCoremark" );
 	int retCoreMark = 1;
@@ -98,7 +98,7 @@ int main( void )
 	//xTaskCreate( vTaskTest, "TaskTest", configMINIMAL_STACK_SIZE * 2U, NULL,
 	//				1, &xHandle);
 					
-	xReturned = xTaskCreate( vStartCoreMark, "Coremark", configMINIMAL_STACK_SIZE * 2U, NULL,
+	xReturned = xTaskCreate( vTaskCoreMark, "Coremark", configMINIMAL_STACK_SIZE * 2U, NULL,
 					1, &xHandle);
 					
 	if(xReturned == pdPASS ){
