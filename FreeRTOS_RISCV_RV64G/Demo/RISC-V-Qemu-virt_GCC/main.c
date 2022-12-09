@@ -37,41 +37,23 @@
 /* Delay.  The 5s value is converted
 to ticks using the pdMS_TO_TICKS() macro. */
 #define main_FREQUENCY_MS			pdMS_TO_TICKS( 25000 )
-//Address coremark.out(main)
-#define MYRAMADDR	0x800a0b54UL
 
 extern void freertos_risc_v_trap_handler( void );
 extern void freertos_vector_table( void );
-
+void coremark_main();
 void vApplicationMallocFailedHook( void );
 void vApplicationIdleHook( void );
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, char *pcTaskName );
 void vApplicationTickHook( void );
 
-void vTaskTest( void *pvParameters )
-{
-	/* Remove compiler warning about unused parameter. */
+void vTaskCoreMark(void *pvParameters){
 	( void ) pvParameters;
 	TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount ();
+	printf( "Start Coremark" );
 	for(;;){
-		vSendString( "In TaskTest" );
+		coremark_main();
 		vTaskDelayUntil( &xLastWakeTime, main_FREQUENCY_MS );
-	
-	}
-}
-
-void vTaskCoreMark(void *pvParameters){
-	( void ) pvParameters;
-	vSendString( "in Funct startCoremark" );
-	int retCoreMark = 1;
-	int (*coremark)(void) = MYRAMADDR;
-	for(;;){
-		retCoreMark = coremark();
-		if(!retCoreMark)
-			vSendString( "CoreMark is done! :D" );
-		else
-			vSendString( "Error: CoreMark is not done! :(" );
 	}
 }
 
@@ -79,8 +61,6 @@ void vTaskCoreMark(void *pvParameters){
 
 int main( void )
 {
-	int ret;
-	printf("PRINTF WORK? ooh yee \n");
 	// trap handler initialization
 		#if( mainVECTOR_MODE_DIRECT == 1 )
 	{
@@ -92,7 +72,7 @@ int main( void )
 	}
 	#endif
 
-	vSendString( "Hello FreeRTOS!" );
+	printf( "Hello FreeRTOS!" );
 	xTaskHandle xHandle = NULL;
 	BaseType_t xReturned; 
 	//xTaskCreate( vTaskTest, "TaskTest", configMINIMAL_STACK_SIZE * 2U, NULL,
@@ -102,14 +82,12 @@ int main( void )
 					1, &xHandle);
 					
 	if(xReturned == pdPASS ){
-		vSendString( "Task Coremark Created" );
-		vSendString( "vTaskStartScheduler start" );
-		vTaskStartScheduler();
-		vSendString( "back to main" );
+		printf( "Task vTaskCoreMark Created" );
+		printf( "vTaskStartScheduler start" );
 		vTaskStartScheduler();
 	}
 	else
-		vSendString( "Error: Task Coremark not Created" );
+		printf( "Error: Task Coremark not Created" );
 	
 	
 	return 0;
